@@ -381,7 +381,7 @@ SengledLightAccessory.prototype.setPowerState = function(powerState, callback) {
 			let setComplete = () => { this.hasCachedColor = false; };
 
 			// Check the color mode to flush
-			if (this.color.getColorMode() == colorModeColorTemperature) {
+			if (this.color.getColorMode() == ColorModeColorTemperature) {
 
 				let colorTemperature = this.color.getColorTemperature();
 				let sengledColorTemperature = Color.MiredsToSengledColorTemperature(colorTemperature, this.color.getConfigData());
