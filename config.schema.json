@@ -52,6 +52,12 @@
                 "type": "boolean",
                 "default": false,
                 "description": "Uses an alternative login API if for some reason logins fail even with increased timeout."
+            },
+            "EnableAdaptiveLighting": {
+                "title": "EnableAdaptiveLighting",
+                "type": "boolean",
+                "default": false,
+                "description": "Experimental.  Enables adaptive lighting for each light that supports brightness and color temperature."
             }
         }
     }
