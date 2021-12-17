@@ -534,7 +534,7 @@ SengledLightAccessory.prototype.setHue = function(hue, callback) {
 	this.color.setHue(hue);
 
 	// Check if the hue set should be cached and flushed later.
-	if (me.cacheColorSets()) {
+	if (this.cacheColorSets()) {
 		this.hasCachedColor = true;
 	}
 
@@ -560,7 +560,7 @@ SengledLightAccessory.prototype.setSaturation = function(saturation, callback) {
 		}
 	}
 
-	if (me.cacheColorSets()) {
+	if (this.cacheColorSets()) {
 		this.color.setSaturation(saturation);
 		this.hasCachedColor = true;
 		return callback();
