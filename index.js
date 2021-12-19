@@ -26,7 +26,7 @@ function SengledHubPlatform(log, config, api) {
 	this.useAlternateLoginApi = config['AlternateLoginApi'] ?  config['AlternateLoginApi'] : false;
 	this.timeout = config['Timeout'] ? config['Timeout'] : 4000;
 	this.enableAdaptiveLighting = config['EnableAdaptiveLighting'] ? config['EnableAdaptiveLighting'] : false;
-	this.customTemperatureAdjustment = config['customTemperatureAdjustment'] ? config['customTemperatureAdjustment'] : 0;
+	this.customTemperatureAdjustment = config['CustomTemperatureAdjustment'] ? config['CustomTemperatureAdjustment'] : 0;
 
 	if (api) {
 		this.api = api;
@@ -301,8 +301,10 @@ SengledLightAccessory.prototype.BindService = function() {
 
 			const options = {
 				controllerMode: AdaptiveLightingControllerMode.AUTOMATIC,
-				customColorTemperature: this.platform.customColorTemperature
+				customTemperatureAdjustment: this.platform.customTemperatureAdjustment
 			};
+
+			if (this.debug) this.log("Adding adaptive lighting controller to %s with options: %s", this.getName(), options);
 
 			let adaptiveLightingController = new AdaptiveLightingController(lightbulbService, options);
 			this.accessory.configureController(adaptiveLightingController);
@@ -471,7 +473,7 @@ SengledLightAccessory.prototype.updateColorTemperature = function(colorTemperatu
 
 SengledLightAccessory.prototype.setColorTemperature = function(colorTemperature, callback) {
 	let me = this;
-	me.log("++++ setColortemperature: " + me.getName() + " status colorTemperature to " + colorTemperature);
+	if (me.debug) me.log("++++ setColortemperature: " + me.getName() + " status colorTemperature to " + colorTemperature);
 
 	// Convert to sengleded color temperature range
 	colorTemperature = colorTemperature || this.color.getMinColorTemperature();
