@@ -2,7 +2,7 @@
 
 const {ElementHomeClient, Brightness} = require('./lib/client');
 const {RgbColor, ColorContextData, Color, ColorModeColorTemperature, ColorModeRgb} = require('./lib/color');
-let Accessory, Service, Characteristic, UUIDGen, AdaptiveLightingController;
+let Accessory, Service, Characteristic, UUIDGen, AdaptiveLightingController, AdaptiveLightingControllerMode;
 
 module.exports = function(homebridge) {
 	Accessory = homebridge.platformAccessory;
@@ -10,7 +10,7 @@ module.exports = function(homebridge) {
 	Characteristic = homebridge.hap.Characteristic;
 	UUIDGen = homebridge.hap.uuid;
 	AdaptiveLightingController = homebridge.hap.AdaptiveLightingController;
-
+        AdaptiveLightingControllerMode = homebridge.hap.AdaptiveLightingControllerMode;
 	homebridge.registerPlatform("homebridge-sengled-bulbs", "SengledHub", SengledHubPlatform);
 };
 
@@ -25,7 +25,8 @@ function SengledHubPlatform(log, config, api) {
 	this.password = config['password'];
 	this.useAlternateLoginApi = config['AlternateLoginApi'] ?  config['AlternateLoginApi'] : false;
 	this.timeout = config['Timeout'] ? config['Timeout'] : 4000;
-	this.enableAdaptiveLighting = config['EnableAdaptiveLighting'];
+	this.enableAdaptiveLighting = config['EnableAdaptiveLighting'] ? config['EnableAdaptiveLighting'] : false;
+	this.customTemperatureAdjustment = config['customTemperatureAdjustment'] ? config['customTemperatureAdjustment'] : 0;
 
 	if (api) {
 		this.api = api;
@@ -297,7 +298,13 @@ SengledLightAccessory.prototype.BindService = function() {
 		// Check the config to determine if adaptive lighting is enabled.  If so, add the Adaptive Lighting Controller in 'Auto'
 		// mode to every light that supports at least brightness and color temperature.
 		if (this.platform.enableAdaptiveLighting && this.brightness.supportsBrightness() && this.color.supportsColorTemperature()) {
-			let adaptiveLightingController = new AdaptiveLightingController(lightbulbService);
+
+			const options = {
+				controllerMode: AdaptiveLightingControllerMode.AUTOMATIC,
+				customColorTemperature: this.platform.customColorTemperature
+			};
+
+			let adaptiveLightingController = new AdaptiveLightingController(lightbulbService, options);
 			this.accessory.configureController(adaptiveLightingController);
 			this.adaptiveLightingController = adaptiveLightingController;
 		}
@@ -464,7 +471,7 @@ SengledLightAccessory.prototype.updateColorTemperature = function(colorTemperatu
 
 SengledLightAccessory.prototype.setColorTemperature = function(colorTemperature, callback) {
 	let me = this;
-	if (me.debug) me.log("++++ setColortemperature: " + me.getName() + " status colorTemperature to " + colorTemperature);
+	me.log("++++ setColortemperature: " + me.getName() + " status colorTemperature to " + colorTemperature);
 
 	// Convert to sengleded color temperature range
 	colorTemperature = colorTemperature || this.color.getMinColorTemperature();
