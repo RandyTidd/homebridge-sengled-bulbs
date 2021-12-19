@@ -68,7 +68,7 @@
                 "default": 0,
                 "minimum": -50,
                 "maximum": 100,
-                "description": "Offsets the color temperature used by adaptive lighting.  Adjust the temperature larger for generally warmer light."
+                "description": "Offsets the color temperature used by adaptive lighting by a fixed amount.  Adjust the value larger for warmer light."
             }
         }
     },
