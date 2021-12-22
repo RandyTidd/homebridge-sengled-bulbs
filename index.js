@@ -116,8 +116,7 @@ SengledHubPlatform.prototype.deviceDiscovery = function() {
 				me.removeAccessory(existing.accessory, device.id);
 				me.addAccessory(device);
 				me.log("Accessory removed & re-added!");
-			}
-			else {
+			} else {
 				me.log("Updating existing device: ", device.id, deviceName);
 				existing.BindAndUpdateAccessory(device);
 			}
@@ -272,20 +271,19 @@ SengledLightAccessory.prototype.BindService = function() {
 		// setting hue or saturation as switching to color mode. Seems to work even if that's not the intended use.
 
 		// If color temperature is supported, bind for ColorTemperature characteristic
-		if (this.color.supportsColorTemperature())
-		{
+		if (this.color.supportsColorTemperature()) {
+
 			lightbulbService.getCharacteristic(Characteristic.ColorTemperature)
 				.setProps({
 					minValue: this.color.getMinColorTemperature(),
-					maxValue: this.color.getMaxColorTemperature()
-			})
-			.on('set', this.setColorTemperature.bind(this))
-			.on('get', this.getColorTemperature.bind(this));
+					maxValue: this.color.getMaxColorTemperature()})
+				.on('set', this.setColorTemperature.bind(this))
+				.on('get', this.getColorTemperature.bind(this));
 		}
 
 		// if the light supports color, bind for hue and saturation.
-		if (this.color.supportsRgb())
-		{
+		if (this.color.supportsRgb()) {
+
 			lightbulbService.getCharacteristic(Characteristic.Hue)
 				.on('set', this.setHue.bind(this))
 				.on('get', this.getHue.bind(this));
@@ -352,22 +350,22 @@ SengledLightAccessory.prototype.InititializeState = function() {
 
 	me.lightbulbService.getCharacteristic(Characteristic.On).updateValue(this.context.status);
 
-	if (me.brightness.supportsBrightness())
-	{
+	if (me.brightness.supportsBrightness()) {
+
 		me.lightbulbService
 			.getCharacteristic(Characteristic.Brightness)
 			.updateValue(this.brightness.getValue());
 	}
 
-	if (me.color.supportsColorTemperature())
-	{
+	if (me.color.supportsColorTemperature()) {
+
 		me.lightbulbService
 			.getCharacteristic(Characteristic.ColorTemperature)
 			.updateValue(this.color.getColorTemperature());
 	}
 
-	if (me.color.supportsRgb())
-	{
+	if (me.color.supportsRgb()) {
+
 		me.lightbulbService
 			.getCharacteristic(Characteristic.Hue)
 			.updateValue(this.color.getHue());
@@ -398,8 +396,7 @@ SengledLightAccessory.prototype.setPowerState = function(powerState, callback) {
 				if (this.debug) this.log("Flushing cached color temperature setting: %d.", colorTemperature);
 
 				return this.client.deviceSetColorTemperature(this.getId(), sengledColorTemperature).then(setComplete);
-			}
-			else {
+			} else {
 
 				let normalizedRgb = this.color.getRgb();
 				let rgbColor = Color.NormalizedRgbToSengledRgb(normalizedRgb);
@@ -460,8 +457,7 @@ SengledLightAccessory.prototype.updateColorTemperature = function(colorTemperatu
 	// Set the new color tempreature to the context.  This also updates hue and saturation context values.
 	this.color.setColorTemperature(colorTemperature);
 
-	if (this.color.supportsRgb())
-	{
+	if (this.color.supportsRgb()) {
 		// The light is now in "white light" mode.  Update hue and saturation to homekit.  This makes the
 		// color temperature circle in the color temperature setting match-ish color temperature (warm blue
 		// to cool orange-ish).
