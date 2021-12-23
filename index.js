@@ -23,10 +23,10 @@ function SengledHubPlatform(log, config, api) {
 	this.info = config['info'] || true;
 	this.username = config['username'];
 	this.password = config['password'];
-	this.useAlternateLoginApi = config['AlternateLoginApi'] ?  config['AlternateLoginApi'] : false;
-	this.timeout = config['Timeout'] ? config['Timeout'] : 4000;
-	this.enableAdaptiveLighting = config['EnableAdaptiveLighting'] ? config['EnableAdaptiveLighting'] : false;
-	this.customTemperatureAdjustment = config['CustomTemperatureAdjustment'] ? config['CustomTemperatureAdjustment'] : 0;
+	this.useAlternateLoginApi = config['AlternateLoginApi'] != undefined ? config['AlternateLoginApi'] : false;
+	this.timeout = config['Timeout'] != undefined ? config['Timeout'] : 4000;
+	this.enableAdaptiveLighting = config['EnableAdaptiveLighting'] != undefined ? config['EnableAdaptiveLighting'] : false;
+	this.customTemperatureAdjustment = config['CustomTemperatureAdjustment'] != undefined ? config['CustomTemperatureAdjustment'] : 0;
 
 	if (api) {
 		this.api = api;
@@ -135,8 +135,7 @@ SengledHubPlatform.prototype.deviceDiscovery = function() {
 		if (me.debug) me.log("Discovery complete");
 		if (me.debug) for(let key in me.accessories) {me.log(me.accessories[key].accessory);}
 	}).catch((err) => {
-		this.log("Failed deviceDiscovery: ");
-		this.log(me.debug ? err : err.message);
+		this.log("Failed deviceDiscovery: \n%s", err);
 	});
 };
 
@@ -415,8 +414,7 @@ SengledLightAccessory.prototype.setPowerState = function(powerState, callback) {
 		this.context.status = powerState;
 		callback();
 	}).catch((err) => {
-		this.log("Failed to set power state to", powerState);
-		this.log(err);
+		this.log("Failed to set power state to %s.\n%s", powerState, err);
 		callback(err);
 	});
 };
@@ -440,8 +438,7 @@ SengledLightAccessory.prototype.setBrightness = function(brightness, callback) {
 		this.brightness.setValue(brightness);
 		callback();
 	}).catch((err) => {
-		this.log("Failed to set brightness to", brightness);
-		this.log(err);
+		this.log("Failed to set brightness to %s.\n%s", brightness, err);
 		callback(err);
 	});
 };
@@ -513,8 +510,7 @@ SengledLightAccessory.prototype.setColorTemperature = function(colorTemperature,
 		this.updateColorTemperature(colorTemperature);
 		callback();
 	}).catch((err) => {
-		this.log("Failed to set colorTemperature to " + colorTemperature);
-		this.log(err);
+		this.log("Failed to set colorTemperature to %s.\n%s",  colorTemperature, err);
 		callback(err);
 	});
 };
@@ -600,14 +596,13 @@ SengledLightAccessory.prototype.setSaturation = function(saturation, callback) {
 
 		callback();
 	}).catch((err) => {
-		this.log("Failed to set rgb color to ", this.color.getRgb());
+		this.log("Failed to set rgb color to %s.\n%s", this.color.getRgb(), err);
 
 		// restore color state.
 		if (oldColorData != undefined) {
 			this.color.assignData(oldColorData);
 		}
 
-		this.log(err);
 		callback(err);
 	});
 };
