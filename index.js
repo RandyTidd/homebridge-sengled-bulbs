@@ -21,8 +21,8 @@ function SengledHubPlatform(log, config, api) {
 	this.cache_timeout = 60; // seconds
 	this.debug = config['debug'] || false;
 	this.info = config['info'] || true;
-	this.username = config['username'];
-	this.password = config['password'];
+	let username = config['username'];
+	let password = config['password'];
 	this.useAlternateLoginApi = config['AlternateLoginApi'] != undefined ? config['AlternateLoginApi'] : false;
 	this.timeout = config['Timeout'] != undefined ? config['Timeout'] : 4000;
 	this.enableAdaptiveLighting = config['EnableAdaptiveLighting'] != undefined ? config['EnableAdaptiveLighting'] : false;
@@ -35,7 +35,7 @@ function SengledHubPlatform(log, config, api) {
 		this.api.on('didFinishLaunching', this.didFinishLaunching.bind(this));
 	}
 
-	this.client = new ElementHomeClient(this.useAlternateLoginApi, this.timeout, log, this.debug, this.info);
+	this.client = new ElementHomeClient(username, password, this.useAlternateLoginApi, this.timeout, log, this.debug, this.info);
 }
 
 SengledHubPlatform.prototype.configureAccessory = function(accessory) {
