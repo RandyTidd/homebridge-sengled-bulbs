@@ -28,6 +28,8 @@ function SengledHubPlatform(log, config, api) {
 	this.enableAdaptiveLighting = config['EnableAdaptiveLighting'] != undefined ? config['EnableAdaptiveLighting'] : false;
 	this.customTemperatureAdjustment = config['CustomTemperatureAdjustment'] != undefined ? config['CustomTemperatureAdjustment'] : 0;
 
+	if (this.debug) this.log("config: \n%s", config);
+
 	if (api) {
 		this.api = api;
 		this.api.on('didFinishLaunching', this.didFinishLaunching.bind(this));
