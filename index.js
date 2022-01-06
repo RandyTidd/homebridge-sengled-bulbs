@@ -119,7 +119,7 @@ SengledHubPlatform.prototype.deviceDiscovery = function() {
 				me.addAccessory(device);
 				me.log("Accessory removed & re-added!");
 			} else {
-				me.log("Updating existing device: ", device.id, deviceName);
+				if (me.debug) me.log("Updating existing device: ", device.id, deviceName);
 				existing.BindAndUpdateAccessory(device);
 			}
 		});
